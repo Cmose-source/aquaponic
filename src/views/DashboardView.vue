@@ -4,121 +4,96 @@
       <AppSidebar />
 
       <main class="dashboard-main">
-
-      <!-- ══ Quick Status Panel ══ -->
-      <section class="panel">
-        <h2 class="panel-title">Quick Status Panel</h2>
-        <div class="status-grid">
-          <!-- Soil Moisture -->
-          <div class="sensor-card">
-            <div class="card-header">
-              <div class="card-label">
-                <span class="card-icon">🌱</span>
-                <span>Soil Moisture</span>
+        <!-- ══ Quick Status Panel ══ -->
+        <section class="panel">
+          <h2 class="panel-title">Quick Status Panel</h2>
+          <div class="status-grid">
+            <!-- Soil Moisture -->
+            <div class="sensor-card">
+              <div class="card-header">
+                <div class="card-label">
+                  <span class="card-icon">🌱</span>
+                  <span>Soil Moisture</span>
+                </div>
+                <span class="badge badge-normal">NORMAL</span>
               </div>
-              <span class="badge badge-normal">NORMAL</span>
-            </div>
-            <div class="card-value">{{ soilMoisture }}%</div>
-            <div class="progress-bar">
-              <div class="progress-fill" :style="{ width: soilMoisture + '%' }"></div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- ══ Control Preview Panel ══ -->
-      <section class="panel">
-        <h2 class="panel-title">Control Preview Panel</h2>
-        <div class="control-grid">
-          <!-- Pompa Air -->
-          <div class="control-card">
-            <div class="control-label">
-              Pompa Air
-              <span>💧</span>
-            </div>
-            <div
-              class="toggle"
-              :class="{ active: pumpaAir }"
-              @click="pumpaAir = !pumpaAir"
-              role="switch"
-              :aria-checked="pumpaAir"
-            >
-              <div class="toggle-knob"></div>
+              <div class="card-value">{{ soilMoisture }}%</div>
+              <div class="progress-bar">
+                <div class="progress-fill" :style="{ width: soilMoisture + '%' }"></div>
+              </div>
             </div>
           </div>
+        </section>
 
-        </div>
-      </section>
-
-      <!-- ══ Live System Status ══ -->
-      <section class="panel">
-        <h2 class="panel-title">Live System Status</h2>
-        <div class="status-grid status-grid-4">
-          <div class="live-card" v-for="item in systemStatus" :key="item.title">
-            <div class="live-dot-wrap">
-              <span class="live-dot"></span>
-            </div>
-            <div>
-              <div class="live-title">{{ item.title }}</div>
-              <div class="live-desc">{{ item.desc }}</div>
-            </div>
+        <!-- ══ Control Preview Panel ══ -->
+        <section class="panel">
+          <h2 class="panel-title">Control Preview Panel</h2>
+          <div class="control-grid">
+            <PumpControl />
           </div>
-        </div>
-      </section>
+        </section>
 
-      <!-- ══ Mini Analytics ══ -->
-      <section class="panel">
-        <h2 class="panel-title">Mini Analytics</h2>
-        <div class="analytics-wrap">
-          <div class="chart-labels">
-            <span v-for="d in chartData" :key="d.label" class="chart-label">{{ d.label }}</span>
-          </div>
-          <div class="chart-bars">
-            <div
-              v-for="d in chartData"
-              :key="d.label"
-              class="bar-wrap"
-            >
-              <div
-                class="bar"
-                :style="{ height: d.value + '%', background: d.color }"
-                :title="d.label + ': ' + d.value + '%'"
-              ></div>
+        <!-- ══ Live System Status ══ -->
+        <section class="panel">
+          <h2 class="panel-title">Live System Status</h2>
+          <div class="status-grid status-grid-4">
+            <div class="live-card" v-for="item in systemStatus" :key="item.title">
+              <div class="live-dot-wrap">
+                <span class="live-dot"></span>
+              </div>
+              <div>
+                <div class="live-title">{{ item.title }}</div>
+                <div class="live-desc">{{ item.desc }}</div>
+              </div>
             </div>
           </div>
-          <div class="chart-legend">
-            <span class="legend-item">
-              <span class="legend-dot" style="background:#5a7a40"></span> Soil Moisture
-            </span>
-            <span class="legend-item">
-              <span class="legend-dot" style="background:#c06a3a"></span> Nilai Rendah
-            </span>
-          </div>
-        </div>
-      </section>
+        </section>
 
-    </main>
+        <!-- ══ Mini Analytics ══ -->
+        <section class="panel">
+          <h2 class="panel-title">Mini Analytics</h2>
+          <div class="analytics-wrap">
+            <div class="chart-labels">
+              <span v-for="d in chartData" :key="d.label" class="chart-label">{{ d.label }}</span>
+            </div>
+            <div class="chart-bars">
+              <div v-for="d in chartData" :key="d.label" class="bar-wrap">
+                <div
+                  class="bar"
+                  :style="{ height: d.value + '%', background: d.color }"
+                  :title="d.label + ': ' + d.value + '%'"
+                ></div>
+              </div>
+            </div>
+            <div class="chart-legend">
+              <span class="legend-item">
+                <span class="legend-dot" style="background: #5a7a40"></span> Soil Moisture
+              </span>
+              <span class="legend-item">
+                <span class="legend-dot" style="background: #c06a3a"></span> Nilai Rendah
+              </span>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
   </div>
-</div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import AppSidebar from '@/components/common/AppSidebar.vue'
+import PumpControl from '@/components/dashboard/PumpControl.vue'
 
 // Sensor data (nanti ganti dengan Firebase realtime)
 const soilMoisture = ref(55)
 
-// Control states
-const pumpaAir = ref(true)
-
 // Live system status
 const systemStatus = [
-  { title: 'ESP32 Connected',    desc: 'Online & stable' },
-  { title: 'WiFi Connection',    desc: 'Connected to greenhouse network' },
-  { title: 'Realtime Database',  desc: 'Sync active' },
-  { title: 'Active Sensors',     desc: '6 sensors detected' },
+  { title: 'ESP32 Connected', desc: 'Online & stable' },
+  { title: 'WiFi Connection', desc: 'Connected to greenhouse network' },
+  { title: 'Realtime Database', desc: 'Sync active' },
+  { title: 'Active Sensors', desc: '6 sensors detected' },
 ]
 
 // Mini analytics chart data
@@ -155,7 +130,8 @@ const chartData = [
 }
 
 /* ── Section Panel ── */
-.panel {}
+.panel {
+}
 
 .panel-title {
   font-family: 'Georgia', serif;
@@ -184,15 +160,17 @@ const chartData = [
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
-  border: 1px solid rgba(0,0,0,0.04);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
   max-width: 340px;
 }
 
 .sensor-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
 
 .card-header {
@@ -210,7 +188,9 @@ const chartData = [
   font-weight: 500;
 }
 
-.card-icon { font-size: 1rem; }
+.card-icon {
+  font-size: 1rem;
+}
 
 .badge {
   font-size: 0.62rem;
@@ -221,9 +201,18 @@ const chartData = [
   border-radius: 999px;
 }
 
-.badge-normal  { background: rgba(90,170,90,0.15);  color: #2e6b2e; }
-.badge-stable  { background: rgba(90,140,200,0.15); color: #1a4a80; }
-.badge-optimal { background: rgba(200,100,50,0.15); color: #8b3a10; }
+.badge-normal {
+  background: rgba(90, 170, 90, 0.15);
+  color: #2e6b2e;
+}
+.badge-stable {
+  background: rgba(90, 140, 200, 0.15);
+  color: #1a4a80;
+}
+.badge-optimal {
+  background: rgba(200, 100, 50, 0.15);
+  color: #8b3a10;
+}
 
 .card-value {
   font-family: 'Georgia', serif;
@@ -236,7 +225,7 @@ const chartData = [
 
 .progress-bar {
   height: 6px;
-  background: rgba(0,0,0,0.08);
+  background: rgba(0, 0, 0, 0.08);
   border-radius: 999px;
   overflow: hidden;
 }
@@ -262,8 +251,8 @@ const chartData = [
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid rgba(0,0,0,0.04);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   max-width: 340px;
 }
 
@@ -300,7 +289,7 @@ const chartData = [
   height: 22px;
   border-radius: 50%;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   transition: transform 0.25s;
 }
 
@@ -316,8 +305,8 @@ const chartData = [
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
-  border: 1px solid rgba(0,0,0,0.04);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .live-dot-wrap {
@@ -335,8 +324,13 @@ const chartData = [
 }
 
 @keyframes pulse {
-  0%, 100% { box-shadow: 0 0 0 3px rgba(76,175,80,0.2); }
-  50%       { box-shadow: 0 0 0 6px rgba(76,175,80,0.07); }
+  0%,
+  100% {
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(76, 175, 80, 0.07);
+  }
 }
 
 .live-title {
@@ -356,8 +350,8 @@ const chartData = [
   background: #ede8df;
   border-radius: 14px;
   padding: 1.5rem 1.5rem 1.25rem;
-  border: 1px solid rgba(0,0,0,0.04);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .chart-bars {

@@ -1,44 +1,49 @@
-# aquaponic
+# Setup Server Aquaponic
 
-This template should help get you started developing with Vue 3 in Vite.
+Buka terminal di server (Debian/Ubuntu) dan jalankan langkah-langkah berikut:
 
-## Recommended IDE Setup
+### 1. Konfigurasi Mosquitto MQTT
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+Tambahkan listener ke file konfigurasi (`/etc/mosquitto/mosquitto.conf`):
 
-## Recommended Browser Setup
+```conf
+listener 1883
+protocol mqtt
+allow_anonymous true
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+listener 9001
+protocol websockets
+allow_anonymous true
+```
 
-## Customize configuration
+Restart layanan mosquitto:
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+```sh
+sudo systemctl restart mosquitto
+```
 
-## Project Setup
+### 2. Install Dependencies Poryek
+
+Masuk ke folder proyek dan jalankan:
 
 ```sh
 npm install
+npm install -g pm2 serve
 ```
 
-### Compile and Hot-Reload for Development
+### 3. Jalankan Scheduler (Backend)
 
 ```sh
-npm run dev
+pm2 start scheduler.js --name "aquaponic-scheduler"
+pm2 save
+pm2 startup
 ```
 
-### Compile and Minify for Production
+### 4. Build & Hosting Frontend (Aplikasi Web)
 
 ```sh
 npm run build
+pm2 start serve --name "aquaponic-web" -- -s dist -l 3000
 ```
 
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+> Akses web melalui browser di `http://[IP_SERVER]:3000`

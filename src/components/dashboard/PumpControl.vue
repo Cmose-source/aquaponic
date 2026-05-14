@@ -5,50 +5,130 @@
         <p class="pump-control__title">{{ title }}</p>
         <p class="pump-control__description">{{ description }}</p>
       </div>
-      <button class="pump-control__switch" :class="{ 'pump-control__switch--on': isOn }" @click="togglePump" type="button">
+      <button
+        class="pump-control__switch"
+        :class="{ 'pump-control__switch--on': isOn }"
+        @click="togglePump"
+        type="button"
+      >
         <span class="pump-control__switch-knob"></span>
       </button>
     </div>
 
     <div class="pump-control__status">
-      <span class="pump-control__state">{{ isOn ? 'Aktif' : 'Tidak aktif' }}</span>
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 0.5rem;
+        "
+      >
+        <span class="pump-control__state">{{ isOn ? 'Aktif' : 'Tidak aktif' }}</span>
+        <span
+          style="font-size: 0.75rem; font-weight: bold"
+          :style="{ color: isConnected ? '#10b981' : '#ef4444' }"
+        >
+          {{ isConnected ? '🟢 MQTT Connected' : '🔴 MQTT Disconnected' }}
+        </span>
+      </div>
       <span class="pump-control__state-detail">
-        {{ isOn ? `Pompa beroperasi pada ${flow}% flow` : 'Tekan untuk hidupkan pompa manual' }}
+        {{ isOn ? 'Pompa sedang menyala' : 'Tekan untuk hidupkan pompa manual' }}
       </span>
     </div>
 
     <dl class="pump-control__metrics">
       <div>
-        <dt>Flow</dt>
-        <dd>{{ flow }}%</dd>
-      </div>
-      <div>
         <dt>Total durasi</dt>
-        <dd>12m</dd>
+        <dd>{{ displayDuration }}</dd>
       </div>
       <div>
         <dt>Terakhir aktif</dt>
-        <dd>14:32</dd>
+        <dd>{{ lastActive }}</dd>
       </div>
     </dl>
   </section>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, watch, onUnmounted, computed } from 'vue'
+import { useMqtt } from '@/composables/useMqtt' // Pastikan path import benar
 
 const props = defineProps({
   title: { type: String, default: 'Pompa Air' },
   description: { type: String, default: 'Kontrol manual dan ringkasan aktivitas.' },
-  initialOn: { type: Boolean, default: false },
-  initialFlow: { type: Number, default: 50 },
+  targetTopic: { type: String, default: 'Isa/Smartlamp' }, // Topik default
 })
 
-const isOn = ref(props.initialOn)
-const flow = ref(props.initialFlow)
+const { isConnected, lampStatus, feederStatus, connectMqtt, controlDevice } = useMqtt()
+
+const isOn = ref(false)
+
+// Jadikan komputasi agar komponen merespon var state yang betul
+const currentDeviceStatus = computed(() => {
+  return props.targetTopic === 'Isa/Feeder' ? feederStatus.value : lampStatus.value
+})
+
+const lastActive = ref('-')
+const totalSeconds = ref(0)
+const displayDuration = ref('00:00:00')
+let timer = null
+
+function formatTime(sec) {
+  const h = Math.floor(sec / 3600)
+    .toString()
+    .padStart(2, '0')
+  const m = Math.floor((sec % 3600) / 60)
+    .toString()
+    .padStart(2, '0')
+  const s = (sec % 60).toString().padStart(2, '0')
+  return `${h}:${m}:${s}`
+}
+
+function updateLastActive() {
+  const now = new Date()
+  lastActive.value = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+}
+
+watch(currentDeviceStatus, (newVal) => {
+  isOn.value = newVal === 'ON'
+})
+
+watch(isOn, (newVal) => {
+  updateLastActive()
+  if (newVal) {
+    if (!timer) {
+      timer = setInterval(() => {
+        totalSeconds.value++
+        displayDuration.value = formatTime(totalSeconds.value)
+      }, 1000)
+    }
+  } else {
+    if (timer) {
+      clearInterval(timer)
+      timer = null
+    }
+  }
+})
+
+onUnmounted(() => {
+  if (timer) clearInterval(timer)
+})
+
+onMounted(() => {
+  connectMqtt()
+})
 
 function togglePump() {
-  isOn.value = !isOn.value
+  if (!isConnected.value) {
+    alert('Menunggu koneksi ke server MQTT lokal (10.80.80.233)...')
+    return
+  }
+
+  const newState = !isOn.value
+
+  // Kirim perintah ON / OFF pada topik yang tepat (Isa/Smartlamp atau Isa/Feeder)
+  controlDevice(props.targetTopic, newState ? 'ON' : 'OFF')
 }
 </script>
 
@@ -88,7 +168,9 @@ function togglePump() {
   border: 1px solid #d1d5db;
   background: #eef2ff;
   position: relative;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .pump-control__switch--on {
@@ -124,7 +206,7 @@ function togglePump() {
 
 .pump-control__metrics {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem;
 }
 

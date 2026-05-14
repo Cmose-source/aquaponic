@@ -18,67 +18,22 @@
         <PumpControl
           title="Primary Water Pump"
           description="Kontrol pompa utama untuk sirkulasi air"
-          :initialOn="true"
-          :initialFlow="50"
+          targetTopic="Isa/Smartlamp"
           class="control-section"
         />
 
         <!-- Secondary Pump Control -->
         <PumpControl
-          title="Nutrient Pump"
-          description="Kontrol pompa nutrisi yang bekerja otomatis"
-          :initialOn="false"
-          :initialFlow="30"
+          title="Automatic Feeding"
+          description="Kontrol pemberian pakan ikan otomatis"
+          targetTopic="Isa/Feeder"
           class="control-section"
         />
 
-        <!-- Automation Rules -->
-        <section class="automation-section">
-          <h3 class="section-title">🤖 Automation Rules</h3>
-
-          <div class="rules-list">
-            <div class="rule-card">
-              <div class="rule-header">
-                <span class="rule-status active">● Active</span>
-                <h4 class="rule-name">Morning Irrigation</h4>
-              </div>
-              <p class="rule-condition">When: Time = 06:00 AM</p>
-              <p class="rule-action">Action: Start pump at 60% flow for 30 minutes</p>
-              <div class="rule-controls">
-                <button class="btn-small btn-edit">Edit</button>
-                <button class="btn-small btn-toggle">Disable</button>
-              </div>
-            </div>
-
-            <div class="rule-card">
-              <div class="rule-header">
-                <span class="rule-status active">● Active</span>
-                <h4 class="rule-name">Soil Humidity Control</h4>
-              </div>
-              <p class="rule-condition">When: Humidity < 40%</p>
-              <p class="rule-action">Action: Activate pump automatically</p>
-              <div class="rule-controls">
-                <button class="btn-small btn-edit">Edit</button>
-                <button class="btn-small btn-toggle">Disable</button>
-              </div>
-            </div>
-
-            <div class="rule-card">
-              <div class="rule-header">
-                <span class="rule-status inactive">● Inactive</span>
-                <h4 class="rule-name">Night Mode</h4>
-              </div>
-              <p class="rule-condition">When: Time = 08:00 PM - 06:00 AM</p>
-              <p class="rule-action">Action: Reduce all pump flows to 20%</p>
-              <div class="rule-controls">
-                <button class="btn-small btn-edit">Edit</button>
-                <button class="btn-small btn-toggle">Enable</button>
-              </div>
-            </div>
-          </div>
-
-          <button class="btn-primary btn-large">+ Create New Rule</button>
-        </section>
+        <!-- Automation Rules / Schedule -->
+        <div style="grid-column: span 2">
+          <WateringSchedule />
+        </div>
 
         <!-- Schedule Visualization -->
         <section class="schedule-section">
@@ -90,18 +45,18 @@
               </div>
             </div>
             <div class="schedule-bars">
-              <div class="schedule-bar" style="left: 25%; width: 20%;"></div>
-              <div class="schedule-bar" style="left: 50%; width: 15%;"></div>
+              <div class="schedule-bar" style="left: 25%; width: 20%"></div>
+              <div class="schedule-bar" style="left: 50%; width: 15%"></div>
             </div>
           </div>
           <div class="schedule-legend">
             <div class="legend-item">
-              <span class="legend-color" style="background: #10b981;"></span>
+              <span class="legend-color" style="background: #10b981"></span>
               <span>Primary Pump</span>
             </div>
             <div class="legend-item">
-              <span class="legend-color" style="background: #3b82f6;"></span>
-              <span>Nutrient Pump</span>
+              <span class="legend-color" style="background: #3b82f6"></span>
+              <span>Automatic Feeding</span>
             </div>
           </div>
         </section>
@@ -140,6 +95,7 @@
 <script setup>
 import AppSidebar from '@/components/common/AppSidebar.vue'
 import PumpControl from '@/components/dashboard/PumpControl.vue'
+import WateringSchedule from '@/components/dashboard/WateringSchedule.vue'
 </script>
 
 <style scoped>
