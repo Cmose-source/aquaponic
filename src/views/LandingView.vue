@@ -6,7 +6,8 @@
       <div class="container">
         <h2 class="section-title">Fitur Unggulan</h2>
         <p class="section-subtitle">
-          Pantau kolam lele, kendalikan peralatan, dan pahami data pertumbuhan tanaman dalam satu alur kerja.
+          Ringkas kondisi kolam lele di dashboard, dukung keputusan operasi lewat analytics, dan rapikan preferensi
+          di pengaturan — semuanya tetap dalam satu alur kerja.
         </p>
 
         <div class="features-grid">
@@ -16,21 +17,7 @@
             class="feature-card"
           >
             <div class="feature-icon-wrap" aria-hidden="true">
-              <svg v-if="feature.icon === 'chart'" class="feature-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 3v18h18"/>
-                <path d="M7 16l4-4 4 4 6-6"/>
-              </svg>
-              <svg v-else-if="feature.icon === 'robot'" class="feature-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="5" y="8" width="14" height="10" rx="2"/>
-                <path d="M9 8V6a3 3 0 0 1 6 0v2"/>
-                <circle cx="9.5" cy="13" r="1" fill="currentColor" stroke="none"/>
-                <circle cx="14.5" cy="13" r="1" fill="currentColor" stroke="none"/>
-                <path d="M12 16v1"/>
-              </svg>
-              <svg v-else class="feature-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="3" width="18" height="18" rx="2"/>
-                <path d="M3 9h18M9 21V9"/>
-              </svg>
+              <span class="material-symbols-outlined feature-material-icon">{{ feature.icon }}</span>
             </div>
             <h3 class="feature-title">{{ feature.title }}</h3>
             <p class="feature-description">{{ feature.description }}</p>
@@ -62,24 +49,24 @@ import HeroSection from '@/components/landing/HeroSection.vue'
 const features = ref([
   {
     id: 1,
-    icon: 'chart',
-    title: 'Monitoring',
+    icon: 'dashboard',
+    title: 'Dashboard',
     description:
-      'Pantau kualitas air, suhu, dan kelembaban growbed secara realtime. Data sensor tersaji rapi agar Anda cepat mengambil keputusan.',
+      'Pusat ringkasan kualitas air, suhu, dan kelembaban growbed secara realtime. Sensor tersusun rapi agar Anda cepat memahami kondisi kolam lalu bertindak tepat.',
   },
   {
     id: 2,
-    icon: 'robot',
-    title: 'Automation',
+    icon: 'analytics',
+    title: 'Analytics',
     description:
-      'Kontrol cerdas untuk pompa, aerator, dan jadwal sirkulasi — kurangi pekerjaan manual dan jaga stabilitas kolam serta tanaman.',
+      'Gali pola dari data sensor untuk mengarahkan pompa, aerator, dan jadwal sirkulasi secara terukur — kurangi pekerjaan manual sambil menjaga stabilitas kolam serta tanaman.',
   },
   {
     id: 3,
-    icon: 'table',
-    title: 'Analytics',
+    icon: 'settings',
+    title: 'Settings',
     description:
-      'Wawasan mendalam tentang tren pertumbuhan tanaman dan prediksi kondisi air, siap mendukung panen yang lebih konsisten.',
+      'Atur preferensi sistem, ambang peringatan, dan akses wawasan mendalam tentang tren tanaman serta perkiraan kondisi air — mendukung keputusan jangka panjang dan panen yang lebih konsisten.',
   },
 ])
 
@@ -161,9 +148,10 @@ const scrollTo = (sectionId) => {
   color: #4a7a38;
 }
 
-.feature-svg {
-  width: 26px;
-  height: 26px;
+.feature-material-icon {
+  font-size: 1.75rem;
+  line-height: 1;
+  font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
 }
 
 .feature-title {
