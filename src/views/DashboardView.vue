@@ -1,19 +1,18 @@
 ﻿<template>
   <div class="dashboard-view">
-    <div class="dashboard-wrapper">
-      <AppSidebar />
+    <AppSidebar />
 
-      <main class="dashboard-main">
+    <main class="dashboard-main">
         <!-- ══ Quick Status Panel ══ -->
         <section class="panel">
           <h2 class="panel-title">Quick Status Panel</h2>
           <div class="status-grid">
-            <!-- Soil Moisture -->
+            <!-- Kelembapan Tanah -->
             <div class="sensor-card">
               <div class="card-header">
                 <div class="card-label">
                   <span class="card-icon">🌱</span>
-                  <span>Soil Moisture</span>
+                  <span>Kelembapan Tanah</span>
                 </div>
                 <span class="badge badge-normal">NORMAL</span>
               </div>
@@ -75,8 +74,7 @@
             </div>
           </div>
         </section>
-      </main>
-    </div>
+    </main>
   </div>
 </template>
 
@@ -114,16 +112,19 @@ const chartData = [
 </script>
 
 <style scoped>
-/* ── Base ── */
-.dashboard-page {
-  min-height: 100vh;
-  background: #f0ece4;
+/* ── Layout (selaras dengan Analytics / MonitoringView) ── */
+.dashboard-view {
+  display: grid;
+  grid-template-columns: minmax(220px, 260px) 1fr;
+  gap: 1.15rem;
+  align-items: start;
 }
 
 .dashboard-main {
   max-width: 1280px;
+  width: 100%;
   margin: 0 auto;
-  padding: 2rem 2rem 3rem;
+  padding: 0 0 2rem;
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -416,6 +417,12 @@ const chartData = [
 }
 
 /* Responsive */
+@media (max-width: 980px) {
+  .dashboard-view {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 900px) {
   .status-grid-4 {
     grid-template-columns: repeat(2, 1fr);

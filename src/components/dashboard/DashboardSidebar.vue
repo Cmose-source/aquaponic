@@ -1,0 +1,96 @@
+<script setup>
+import { RouterLink, useRoute } from 'vue-router'
+import logoUrl from '@/assets/logo.png'
+
+defineProps({
+  mobileOpen: { type: Boolean, default: false },
+})
+
+const emit = defineEmits(['close-mobile'])
+
+const route = useRoute()
+
+/** Selaras dengan AnalyticsSidebar */
+const activeNav =
+  'mx-2 flex items-center gap-3 rounded-xl bg-secondary-container/50 px-4 py-3 font-bold text-primary transition-transform active:scale-95'
+const inactiveNav =
+  'mx-2 flex items-center gap-3 rounded-xl px-4 py-3 text-on-surface-variant transition-colors duration-200 hover:bg-surface-variant/30 hover:text-primary active:scale-95'
+</script>
+
+<template>
+  <div
+    v-show="mobileOpen"
+    class="fixed inset-0 z-40 bg-inverse-surface/30 backdrop-blur-sm md:hidden"
+    aria-hidden="true"
+    @click="emit('close-mobile')"
+  />
+
+  <aside
+    id="dashboard-sidebar-nav"
+    :class="[
+      'fixed left-0 top-0 z-50 flex h-screen w-[280px] flex-col border-r border-border-muted bg-surface-container-lowest transition-transform duration-200 ease-out md:translate-x-0',
+      mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
+    ]"
+  >
+    <div class="flex items-center gap-3 border-b border-border-muted px-6 py-6">
+      <RouterLink
+        :to="{ name: 'landing' }"
+        class="flex min-w-0 items-center gap-3 transition-opacity hover:opacity-80"
+        @click="emit('close-mobile')"
+      >
+        <img
+          :src="logoUrl"
+          alt=""
+          class="h-9 w-9 shrink-0 rounded-xl bg-surface-cream object-contain shadow-sm ring-1 ring-border-muted/50"
+          width="36"
+          height="36"
+        />
+        <span class="truncate font-headline-md text-headline-md text-primary">AquaSurge</span>
+      </RouterLink>
+    </div>
+    <nav class="flex flex-1 flex-col gap-2 overflow-y-auto px-2 py-4" aria-label="Dasbor">
+      <RouterLink
+        :to="{ name: 'dashboard' }"
+        :class="route.name === 'dashboard' ? activeNav : inactiveNav"
+        @click="emit('close-mobile')"
+      >
+        <span
+          class="material-symbols-outlined"
+          :style="route.name === 'dashboard' ? { fontVariationSettings: '\'FILL\' 1' } : undefined"
+          aria-hidden="true"
+        >
+          dashboard
+        </span>
+        <span class="font-label-lg text-label-lg">Dashboard</span>
+      </RouterLink>
+      <RouterLink
+        :to="{ name: 'analytics' }"
+        :class="route.name === 'analytics' ? activeNav : inactiveNav"
+        @click="emit('close-mobile')"
+      >
+        <span
+          class="material-symbols-outlined"
+          :style="route.name === 'analytics' ? { fontVariationSettings: '\'FILL\' 1' } : undefined"
+          aria-hidden="true"
+        >
+          monitoring
+        </span>
+        <span class="font-label-lg text-label-lg">Analytics</span>
+      </RouterLink>
+      <RouterLink
+        :to="{ name: 'settings' }"
+        :class="route.name === 'settings' ? activeNav : inactiveNav"
+        @click="emit('close-mobile')"
+      >
+        <span
+          class="material-symbols-outlined"
+          :style="route.name === 'settings' ? { fontVariationSettings: '\'FILL\' 1' } : undefined"
+          aria-hidden="true"
+        >
+          settings
+        </span>
+        <span class="font-label-lg text-label-lg">Settings</span>
+      </RouterLink>
+    </nav>
+  </aside>
+</template>

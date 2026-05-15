@@ -7,17 +7,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#00d4ff',
-        secondary: '#0ea5e9',
-        accent: '#10b981',
+        primary: '#22c55e',
+        secondary: '#15803d',
+        accent: '#4ade80',
         dark: '#0f172a',
+        'status-water': '#047857',
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui'],
       },
       boxShadow: {
-        glow: '0 0 20px rgba(0, 212, 255, 0.3)',
-        'glow-lg': '0 0 40px rgba(0, 212, 255, 0.5)',
+        glow: '0 0 20px rgba(34, 197, 94, 0.32)',
+        'glow-lg': '0 0 40px rgba(34, 197, 94, 0.45)',
       },
     },
   },

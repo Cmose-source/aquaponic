@@ -53,7 +53,7 @@
               <span>Primary Pump</span>
             </div>
             <div class="legend-item">
-              <span class="legend-color" style="background: #3b82f6"></span>
+              <span class="legend-color" style="background: #15803d"></span>
               <span>Automatic Feeding</span>
             </div>
           </div>
@@ -112,7 +112,7 @@ const { historyLogs } = useMqtt()
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #0ea5e9;
+  color: #0f766e;
   margin: 0;
 }
 
@@ -232,21 +232,21 @@ const { historyLogs } = useMqtt()
 }
 
 .btn-edit {
-  background: rgba(59, 130, 246, 0.2);
-  color: #3b82f6;
+  background: rgba(34, 197, 94, 0.18);
+  color: #166534;
 }
 
 .btn-edit:hover {
-  background: rgba(59, 130, 246, 0.3);
+  background: rgba(34, 197, 94, 0.28);
 }
 
 .btn-toggle {
-  background: rgba(0, 212, 255, 0.2);
-  color: #00d4ff;
+  background: rgba(34, 197, 94, 0.2);
+  color: #15803d;
 }
 
 .btn-toggle:hover {
-  background: rgba(0, 212, 255, 0.3);
+  background: rgba(34, 197, 94, 0.32);
 }
 
 .btn-primary {
@@ -288,7 +288,7 @@ const { historyLogs } = useMqtt()
   width: 100%;
   height: 100%;
   font-size: 0.7rem;
-  color: #0ea5e9;
+  color: #0f766e;
 }
 
 .time-marker {
@@ -297,7 +297,7 @@ const { historyLogs } = useMqtt()
   align-items: flex-start;
   justify-content: center;
   padding: 0.25rem 0;
-  border-right: 1px solid rgba(0, 212, 255, 0.1);
+  border-right: 1px solid rgba(34, 197, 94, 0.12);
 }
 
 .schedule-bars {
@@ -326,7 +326,7 @@ const { historyLogs } = useMqtt()
   align-items: center;
   gap: 0.5rem;
   font-size: 0.9rem;
-  color: #0ea5e9;
+  color: #0f766e;
 }
 
 .legend-color {
@@ -360,13 +360,13 @@ const { historyLogs } = useMqtt()
 }
 
 .history-time {
-  color: #0ea5e9;
+  color: #15803d;
   font-weight: 700;
   text-align: center;
 }
 
 .history-action {
-  color: #00d4ff;
+  color: #16a34a;
 }
 
 .history-value {

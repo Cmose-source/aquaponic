@@ -89,14 +89,14 @@ export default {
 
 /* Primary Button */
 .app-btn--primary {
-  background: linear-gradient(135deg, #00d4ff, #0ea5e9);
+  background: linear-gradient(135deg, #4ade80, #22c55e);
   color: #0f172a;
-  box-shadow: 0 10px 25px rgba(0, 212, 255, 0.3);
+  box-shadow: 0 10px 25px rgba(34, 197, 94, 0.32);
 }
 
 .app-btn--primary:hover:not(:disabled) {
   transform: translateY(-3px);
-  box-shadow: 0 15px 40px rgba(0, 212, 255, 0.5);
+  box-shadow: 0 15px 40px rgba(34, 197, 94, 0.45);
 }
 
 .app-btn--primary:active:not(:disabled) {
@@ -105,16 +105,16 @@ export default {
 
 /* Secondary Button */
 .app-btn--secondary {
-  background: rgba(0, 212, 255, 0.15);
-  color: #00d4ff;
-  border: 2px solid rgba(0, 212, 255, 0.3);
-  box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+  background: rgba(34, 197, 94, 0.14);
+  color: #15803d;
+  border: 2px solid rgba(34, 197, 94, 0.35);
+  box-shadow: 0 0 15px rgba(34, 197, 94, 0.18);
 }
 
 .app-btn--secondary:hover:not(:disabled) {
-  background: rgba(0, 212, 255, 0.25);
-  border-color: #00d4ff;
-  box-shadow: 0 0 25px rgba(0, 212, 255, 0.4);
+  background: rgba(34, 197, 94, 0.22);
+  border-color: #22c55e;
+  box-shadow: 0 0 25px rgba(34, 197, 94, 0.32);
   transform: translateY(-2px);
 }
 

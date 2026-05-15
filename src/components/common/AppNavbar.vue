@@ -1,19 +1,13 @@
 <template>
-  <nav class="navbar">
+  <nav class="navbar" :class="{ 'navbar--landing': isLanding }">
     <div class="navbar-inner">
-      <!-- Logo -->
-      <div class="nav-logo">
+      <router-link to="/" class="nav-logo">
         <div class="logo-icon">
-          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="32" height="32" rx="8" fill="#5a7a5a"/>
-            <path d="M16 6C11 6 7 10 7 15c0 3 1.5 5.5 4 7l1-3c-1.5-1-2.5-2.5-2.5-4 0-3.5 2.9-6.5 6.5-6.5s6.5 3 6.5 6.5c0 1.5-1 3-2.5 4l1 3c2.5-1.5 4-4 4-7 0-5-4-9-9-9z" fill="#c8e6c8"/>
-            <path d="M16 12c-1.7 0-3 1.3-3 3 0 1 .5 2 1.3 2.6L13 22h6l-1.3-4.4c.8-.6 1.3-1.6 1.3-2.6 0-1.7-1.3-3-3-3z" fill="#e8f5e8"/>
-          </svg>
+          <img :src="logoImage" alt="AquaSurge logo" />
         </div>
         <span class="logo-text">AquaSurge</span>
-      </div>
+      </router-link>
 
-      <!-- Nav Links -->
       <ul class="nav-links">
         <li v-for="link in navLinks" :key="link.name">
           <router-link
@@ -26,7 +20,6 @@
         </li>
       </ul>
 
-      <!-- Right: Timer Badge -->
       <div class="nav-right">
         <div class="live-badge">
           <span class="live-dot"></span>
@@ -38,16 +31,29 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useRoute } from 'vue-router'
+import logoImage from '@/assets/logo.png'
 
-const navLinks = [
-  { name: 'Beranda',    path: '/',            routeName: 'home' },
-  { name: 'Dashboard',  path: '/dashboard',   routeName: 'dashboard' },
-  { name: 'Monitoring', path: '/monitoring',  routeName: 'monitoring' },
-  { name: 'Control',    path: '/control',     routeName: 'control' },
-  { name: 'Analytics',  path: '/analytics',   routeName: 'analytics' },
-  { name: 'About',      path: '/about',       routeName: 'about' },
+const route = useRoute()
+
+const navLinksFull = [
+  { name: 'Dashboard', path: '/dashboard', routeName: 'dashboard' },
+  { name: 'Analytics', path: '/analytics', routeName: 'analytics' },
+  { name: 'Settings', path: '/settings', routeName: 'settings' },
 ]
+
+const navLinksLanding = [
+  { name: 'Dashboard', path: '/dashboard', routeName: 'dashboard' },
+  { name: 'Analytics', path: '/analytics', routeName: 'analytics' },
+  { name: 'Settings', path: '/settings', routeName: 'settings' },
+]
+
+const navLinks = computed(() =>
+  route.name === 'landing' ? navLinksLanding : navLinksFull,
+)
+
+const isLanding = computed(() => route.name === 'landing')
 
 const currentTime = ref('')
 let timer = null
@@ -57,7 +63,7 @@ function updateTime() {
   const h = String(now.getHours()).padStart(2, '0')
   const m = String(now.getMinutes()).padStart(2, '0')
   const s = String(now.getSeconds()).padStart(2, '0')
-  currentTime.value = `${h}.${m}.${s}`
+  currentTime.value = `${h}:${m}:${s}`
 }
 
 onMounted(() => {
@@ -80,6 +86,11 @@ onUnmounted(() => clearInterval(timer))
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
+.navbar--landing {
+  background: rgba(249, 251, 247, 0.94);
+  border-bottom: 1px solid rgba(27, 48, 34, 0.07);
+}
+
 .navbar-inner {
   max-width: 1600px;
   width: min(100%, 1600px);
@@ -92,7 +103,6 @@ onUnmounted(() => clearInterval(timer))
   gap: 2rem;
 }
 
-/* Logo */
 .nav-logo {
   display: flex;
   align-items: center;
@@ -100,6 +110,7 @@ onUnmounted(() => clearInterval(timer))
   flex-shrink: 0;
   text-decoration: none;
   cursor: pointer;
+  color: inherit;
 }
 
 .logo-icon {
@@ -108,25 +119,27 @@ onUnmounted(() => clearInterval(timer))
   flex-shrink: 0;
 }
 
+.logo-icon img,
 .logo-icon svg {
   width: 100%;
   height: 100%;
+  display: block;
+  object-fit: contain;
 }
 
 .logo-text {
-  font-family: 'Georgia', 'Times New Roman', serif;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #2c3e2c;
-  letter-spacing: -0.01em;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1b3022;
+  letter-spacing: -0.02em;
   white-space: nowrap;
 }
 
-/* Nav Links */
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.15rem;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -134,29 +147,27 @@ onUnmounted(() => clearInterval(timer))
 
 .nav-link {
   display: inline-block;
-  padding: 0.4rem 0.875rem;
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  padding: 0.45rem 0.95rem;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
   font-size: 0.875rem;
-  font-weight: 450;
-  color: #4a5240;
+  font-weight: 500;
+  color: #3d5242;
   text-decoration: none;
-  border-radius: 6px;
+  border-radius: 8px;
   transition: background 0.15s, color 0.15s;
-  letter-spacing: 0.01em;
 }
 
 .nav-link:hover {
-  background: rgba(90, 122, 90, 0.1);
-  color: #2c3e2c;
+  background: rgba(136, 192, 87, 0.14);
+  color: #1b3022;
 }
 
 .nav-link.active {
-  background: rgba(90, 122, 90, 0.15);
-  color: #2c3e2c;
+  background: rgba(136, 192, 87, 0.22);
+  color: #1b3022;
   font-weight: 600;
 }
 
-/* Right section */
 .nav-right {
   display: flex;
   align-items: center;
@@ -168,37 +179,37 @@ onUnmounted(() => clearInterval(timer))
   display: flex;
   align-items: center;
   gap: 0.45rem;
-  background: rgba(90, 170, 90, 0.15);
-  border: 1px solid rgba(90, 170, 90, 0.35);
+  background: rgba(136, 192, 87, 0.2);
+  border: 1px solid rgba(136, 192, 87, 0.4);
   border-radius: 999px;
-  padding: 0.3rem 0.85rem;
+  padding: 0.32rem 0.9rem;
 }
 
 .live-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #4caf50;
-  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
+  background: #5a9a3a;
+  box-shadow: 0 0 0 2px rgba(136, 192, 87, 0.35);
   animation: pulse 2s ease-in-out infinite;
 }
 
 @keyframes pulse {
-  0%, 100% { box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3); }
-  50%       { box-shadow: 0 0 0 5px rgba(76, 175, 80, 0.1); }
+  0%, 100% { box-shadow: 0 0 0 2px rgba(136, 192, 87, 0.35); }
+  50%       { box-shadow: 0 0 0 5px rgba(136, 192, 87, 0.12); }
 }
 
 .live-text {
-  font-family: 'Courier New', 'Lucida Console', monospace;
-  font-size: 1rem;
+  font-family: ui-monospace, 'Cascadia Code', 'Segoe UI Mono', monospace;
+  font-size: 0.82rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  color: #2e6b2e;
+  letter-spacing: 0.04em;
+  color: #244030;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
-  .nav-links { display: none; }
-  .nav-clock { display: none; }
+  .nav-links {
+    display: none;
+  }
 }
 </style>
