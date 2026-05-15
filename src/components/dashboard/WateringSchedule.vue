@@ -40,8 +40,15 @@
         Memuat jadwal...
       </p>
       <p
+        v-else-if="!scheduleStore.firebaseReady"
+        class="watering-schedule__empty"
+      >
+        Jadwal Firebase belum tersambung. Pastikan file <code>.env</code> ada di root proyek, lalu
+        restart <code>npm run dev</code>.
+      </p>
+      <p
         v-else-if="scheduleStore.schedules.length === 0"
-        style="text-align: center; color: #5b7562"
+        class="watering-schedule__empty"
       >
         Belum ada jadwal. Silakan tambah.
       </p>
@@ -267,5 +274,20 @@ const handleSave = () => {
   height: 0.72rem;
   border-radius: 50%;
   background: #4c8c45;
+}
+
+.watering-schedule__empty {
+  text-align: center;
+  color: #5b7562;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  padding: 0.5rem;
+}
+
+.watering-schedule__empty code {
+  font-size: 0.85em;
+  background: rgba(37, 92, 52, 0.08);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
 }
 </style>

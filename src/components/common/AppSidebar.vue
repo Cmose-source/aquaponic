@@ -1,15 +1,22 @@
 ﻿<template>
-  <aside class="sidebar">
+  <aside
+    class="sidebar"
+    :class="{
+      'sidebar--drawer-open': drawerOpen,
+      'sidebar--layout-drawer': layoutMode === 'drawer',
+      'sidebar--layout-inline': layoutMode === 'inline',
+    }"
+  >
     <div class="sidebar__top">
-      <div class="sidebar__brand">
-        <div class="sidebar__logo" aria-hidden="true">
-          <span class="material-symbols-outlined sidebar__logo-icon">{{ sectionIcon }}</span>
+      <RouterLink :to="{ name: 'landing' }" class="sidebar__brand" @click="$emit('close-drawer')">
+        <div class="sidebar__logo">
+          <img :src="logoUrl" alt="" class="sidebar__logo-img" width="40" height="40" />
         </div>
         <div class="sidebar__brand-meta">
-          <span class="sidebar__brand-name">{{ pageTitle }}</span>
+          <span class="sidebar__brand-name">AquaSurge</span>
           <span class="sidebar__brand-subtitle">Smart Garden Control</span>
         </div>
-      </div>
+      </RouterLink>
       <p class="sidebar__hint">{{ pageHint }}</p>
     </div>
     <nav class="sidebar__nav" aria-label="Navigasi utama">
@@ -19,6 +26,7 @@
         :to="item.path"
         class="sidebar__link"
         :class="{ 'sidebar__link--active': isActive(item) }"
+        @click="$emit('close-drawer')"
       >
         <span class="material-symbols-outlined sidebar__link-icon" aria-hidden="true">{{ item.icon }}</span>
         <span class="sidebar__link-label">{{ item.label }}</span>
@@ -36,6 +44,18 @@
 <script setup>
 import { computed } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
+import logoUrl from '@/assets/logo.png'
+
+defineProps({
+  drawerOpen: { type: Boolean, default: false },
+  layoutMode: {
+    type: String,
+    default: 'inline',
+    validator: (v) => ['inline', 'drawer'].includes(v),
+  },
+})
+
+defineEmits(['close-drawer'])
 
 const route = useRoute()
 
@@ -49,23 +69,9 @@ function isActive(item) {
   return item.matchNames.includes(route.name)
 }
 
-const pageTitle = computed(() => {
-  if (route.name === 'dashboard') return 'Dashboard'
-  if (route.name === 'analytics' || route.name === 'monitoring') return 'Analytics'
-  if (route.name === 'settings') return 'Settings'
-  return 'AquaSurge'
-})
-
-const sectionIcon = computed(() => {
-  if (route.name === 'dashboard') return 'dashboard'
-  if (route.name === 'analytics' || route.name === 'monitoring') return 'analytics'
-  if (route.name === 'settings') return 'settings'
-  return 'eco'
-})
-
 const pageHint = computed(() => {
   if (route.name === 'dashboard') {
-    return 'Ringkasan sensor, status perangkat, dan pratinjau kontrol — tersaji ringkas agar mudah dipahami.'
+    return 'Ringkasan sensor, grafik monitoring, dan kontrol pompa sistem aquaponic Anda.'
   }
   if (route.name === 'analytics' || route.name === 'monitoring') {
     return 'Grafik dan metrik membantu membaca pola kelembaban, suhu, dan parameter air secara berkelanjutan.'
@@ -100,6 +106,8 @@ const pageHint = computed(() => {
   display: flex;
   align-items: flex-start;
   gap: 0.85rem;
+  text-decoration: none;
+  color: inherit;
 }
 
 .sidebar__logo {
@@ -114,9 +122,11 @@ const pageHint = computed(() => {
   color: #2d5a32;
 }
 
-.sidebar__logo-icon {
-  font-size: 1.35rem;
-  font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+.sidebar__logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 10px;
 }
 
 .sidebar__brand-meta {
@@ -220,8 +230,42 @@ const pageHint = computed(() => {
   color: #5a6c58;
 }
 
+.sidebar--drawer-open {
+  transform: translateX(0);
+}
+
 @media (max-width: 980px) {
+  .sidebar--layout-drawer {
+    position: fixed;
+    left: 0;
+    top: 68px;
+    z-index: 50;
+    width: min(280px, 88vw);
+    height: calc(100vh - 68px);
+    min-width: auto;
+    border-radius: 0;
+    padding: 1.25rem;
+    background: linear-gradient(180deg, #f6fcf3 0%, #ecf8ed 100%);
+    box-shadow: 0 20px 45px rgba(15, 23, 42, 0.15);
+    transform: translateX(-105%);
+    transition: transform 0.25s ease;
+  }
+
+  .sidebar--layout-drawer.sidebar--drawer-open {
+    transform: translateX(0);
+  }
+}
+
+@media (min-width: 981px) {
   .sidebar {
+    position: sticky;
+    top: 1rem;
+    height: calc(100vh - 2rem);
+  }
+}
+
+@media (max-width: 980px) {
+  .sidebar--layout-inline {
     width: 100%;
     min-width: auto;
     border-radius: 22px;
@@ -230,29 +274,29 @@ const pageHint = computed(() => {
     box-shadow: 0 18px 36px rgba(15, 23, 42, 0.06);
   }
 
-  .sidebar__top {
+  .sidebar--layout-inline .sidebar__top {
     gap: 0.75rem;
   }
 
-  .sidebar__nav {
+  .sidebar--layout-inline .sidebar__nav {
     flex-direction: row;
     flex-wrap: wrap;
     gap: 0.55rem;
     margin: 0.85rem 0;
   }
 
-  .sidebar__link {
+  .sidebar--layout-inline .sidebar__link {
     flex: 1 1 calc(50% - 0.45rem);
     justify-content: center;
     gap: 0.45rem;
     padding: 0.75rem 0.5rem;
   }
 
-  .sidebar__link-icon {
+  .sidebar--layout-inline .sidebar__link-icon {
     font-size: 1.05rem;
   }
 
-  .sidebar__footer {
+  .sidebar--layout-inline .sidebar__footer {
     display: none;
   }
 }

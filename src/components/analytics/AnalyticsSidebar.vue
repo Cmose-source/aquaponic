@@ -23,9 +23,9 @@ const inactiveNav =
         <img
           :src="logoUrl"
           alt=""
-          class="h-9 w-9 shrink-0 rounded-xl bg-surface-cream object-contain shadow-sm ring-1 ring-border-muted/50"
-          width="36"
-          height="36"
+          class="h-10 w-10 shrink-0 rounded-xl bg-surface-cream object-contain shadow-sm ring-1 ring-border-muted/50"
+          width="40"
+          height="40"
         />
         <span class="truncate font-headline-md text-headline-md text-primary">AquaSurge</span>
       </RouterLink>

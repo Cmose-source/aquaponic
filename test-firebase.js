@@ -1,5 +1,11 @@
 ﻿import { ref, set, get, child } from "firebase/database";
-import db from "./src/firebase/realtimeDb.js";
+import { getDb } from "./src/firebase/realtimeDb.js";
+
+const db = getDb();
+if (!db) {
+  console.error("❌ VITE_FIREBASE_DATABASE_URL belum diset. Buat file .env di root proyek.");
+  process.exit(1);
+}
 
 const dbRef = ref(db);
 console.log("Menguji koneksi ke Firebase Realtime Database...");

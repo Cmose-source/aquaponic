@@ -1,6 +1,5 @@
 ﻿<template>
   <div class="monitoring-view">
-    <AppSidebar />
     <main class="monitoring-view__main">
       <section class="time-range-panel" aria-label="Filter data analytics">
         <p class="time-range-panel__title">Rentang waktu</p>
@@ -78,7 +77,6 @@
 </template>
 <script setup>
 import { ref } from 'vue'
-import AppSidebar from '@/components/common/AppSidebar.vue'
 import SensorChart from '@/components/dashboard/SensorChart.vue'
 import SensorCard from '@/components/dashboard/SensorCard.vue'
 const timeRanges = [
@@ -91,11 +89,9 @@ const selectedPeriod = ref('24h')
 </script>
 <style scoped>
 .monitoring-view {
-  display: grid;
-  grid-template-columns: minmax(220px, 260px) 1fr;
-  gap: 1.15rem;
-  align-items: start;
+  width: 100%;
 }
+
 .monitoring-view__main {
   display: grid;
   gap: 1.15rem;
@@ -204,9 +200,6 @@ const selectedPeriod = ref('24h')
   }
 }
 @media (max-width: 980px) {
-  .monitoring-view {
-    grid-template-columns: 1fr;
-  }
   .monitoring-grid {
     grid-template-columns: 1fr;
   }

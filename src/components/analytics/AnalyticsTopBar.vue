@@ -1,6 +1,11 @@
 <script setup>
 import { useLiveClockDots } from '@/composables/useLiveClockDots.js'
 
+defineProps({
+  desktopTitle: { type: String, default: 'System Control' },
+  mobileTitle: { type: String, default: 'Analytics' },
+})
+
 const emit = defineEmits(['toggle-menu'])
 
 const { timeDots, datetimeIso } = useLiveClockDots()
@@ -24,10 +29,10 @@ const { timeDots, datetimeIso } = useLiveClockDots()
       <h1
         class="hidden font-headline-md text-headline-md text-on-surface dark:text-surface-bright lg:block"
       >
-        System Control
+        {{ desktopTitle }}
       </h1>
       <h1 class="font-headline-md text-headline-md text-on-surface dark:text-surface-bright lg:hidden">
-        Analytics
+        {{ mobileTitle }}
       </h1>
       <span
         class="inline-flex items-center gap-2.5 rounded-full border border-border-muted bg-secondary-container/90 px-3 py-1.5 shadow-sm shadow-primary/10 dark:border-border-muted/80 dark:bg-secondary-container/70"

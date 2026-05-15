@@ -1,10 +1,8 @@
 <template>
-  <nav class="navbar" :class="{ 'navbar--landing': isLanding }">
+  <nav class="navbar">
     <div class="navbar-inner">
       <router-link to="/" class="nav-logo">
-        <div class="logo-icon">
-          <img :src="logoImage" alt="AquaSurge logo" />
-        </div>
+        <img :src="logoImage" alt="" class="nav-logo__img" width="40" height="40" />
         <span class="logo-text">AquaSurge</span>
       </router-link>
 
@@ -13,7 +11,7 @@
           <router-link
             :to="link.path"
             class="nav-link"
-            :class="{ active: $route.name === link.routeName }"
+            :class="{ active: route.name === link.routeName }"
           >
             {{ link.name }}
           </router-link>
@@ -21,57 +19,68 @@
       </ul>
 
       <div class="nav-right">
-        <div class="live-badge">
-          <span class="live-dot"></span>
-          <span class="live-text">{{ currentTime }}</span>
+        <div class="live-badge" role="status" :title="`Terhubung · ${timeDots}`">
+          <span class="live-dot" aria-hidden="true"></span>
+          <time class="live-text" :datetime="datetimeIso">{{ clockDisplay }}</time>
         </div>
+
+        <button
+          v-if="!shellLayout"
+          type="button"
+          class="nav-menu-btn"
+          :aria-expanded="mobileOpen"
+          aria-controls="app-mobile-nav"
+          aria-label="Buka menu navigasi"
+          @click="mobileOpen = !mobileOpen"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+        </button>
       </div>
+    </div>
+
+    <div
+      v-if="!shellLayout"
+      v-show="mobileOpen"
+      id="app-mobile-nav"
+      class="nav-mobile-panel"
+    >
+      <ul class="nav-mobile-links">
+        <li v-for="link in navLinks" :key="link.name">
+          <router-link
+            :to="link.path"
+            class="nav-mobile-link"
+            :class="{ active: route.name === link.routeName }"
+            @click="mobileOpen = false"
+          >
+            {{ link.name }}
+          </router-link>
+        </li>
+      </ul>
     </div>
   </nav>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import logoImage from '@/assets/logo.png'
+import { useLiveClockDots } from '@/composables/useLiveClockDots.js'
 
-const route = useRoute()
-
-const navLinksFull = [
-  { name: 'Dashboard', path: '/dashboard', routeName: 'dashboard' },
-  { name: 'Analytics', path: '/analytics', routeName: 'analytics' },
-  { name: 'Settings', path: '/settings', routeName: 'settings' },
-]
-
-const navLinksLanding = [
-  { name: 'Dashboard', path: '/dashboard', routeName: 'dashboard' },
-  { name: 'Analytics', path: '/analytics', routeName: 'analytics' },
-  { name: 'Settings', path: '/settings', routeName: 'settings' },
-]
-
-const navLinks = computed(() =>
-  route.name === 'landing' ? navLinksLanding : navLinksFull,
-)
-
-const isLanding = computed(() => route.name === 'landing')
-
-const currentTime = ref('')
-let timer = null
-
-function updateTime() {
-  const now = new Date()
-  const h = String(now.getHours()).padStart(2, '0')
-  const m = String(now.getMinutes()).padStart(2, '0')
-  const s = String(now.getSeconds()).padStart(2, '0')
-  currentTime.value = `${h}:${m}:${s}`
-}
-
-onMounted(() => {
-  updateTime()
-  timer = setInterval(updateTime, 1000)
+defineProps({
+  shellLayout: { type: Boolean, default: false },
 })
 
-onUnmounted(() => clearInterval(timer))
+const route = useRoute()
+const mobileOpen = ref(false)
+const { timeDots, datetimeIso } = useLiveClockDots()
+
+const clockDisplay = computed(() => timeDots.value.replace(/\./g, ':'))
+
+const navLinks = [
+  { name: 'Dashboard', path: '/dashboard', routeName: 'dashboard' },
+  { name: 'Analytics', path: '/analytics', routeName: 'analytics' },
+  { name: 'Settings', path: '/settings', routeName: 'settings' },
+]
 </script>
 
 <style scoped>
@@ -81,13 +90,8 @@ onUnmounted(() => clearInterval(timer))
   left: 0;
   right: 0;
   z-index: 100;
-  background: rgba(240, 236, 228, 0.85);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.navbar--landing {
   background: rgba(249, 251, 247, 0.94);
+  backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(27, 48, 34, 0.07);
 }
 
@@ -95,12 +99,12 @@ onUnmounted(() => clearInterval(timer))
   max-width: 1600px;
   width: min(100%, 1600px);
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 1.5rem;
   height: 68px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .nav-logo {
@@ -109,22 +113,18 @@ onUnmounted(() => clearInterval(timer))
   gap: 0.625rem;
   flex-shrink: 0;
   text-decoration: none;
-  cursor: pointer;
   color: inherit;
 }
 
-.logo-icon {
-  width: 36px;
-  height: 36px;
+.nav-logo__img {
+  width: 40px;
+  height: 40px;
   flex-shrink: 0;
-}
-
-.logo-icon img,
-.logo-icon svg {
-  width: 100%;
-  height: 100%;
-  display: block;
+  border-radius: 12px;
   object-fit: contain;
+  background: #f4fcf5;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.85) inset;
+  border: 1px solid rgba(27, 48, 34, 0.08);
 }
 
 .logo-text {
@@ -141,7 +141,7 @@ onUnmounted(() => clearInterval(timer))
   align-items: center;
   gap: 0.15rem;
   list-style: none;
-  margin: 0;
+  margin: 0 auto 0 0;
   padding: 0;
 }
 
@@ -171,7 +171,7 @@ onUnmounted(() => clearInterval(timer))
 .nav-right {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
   flex-shrink: 0;
 }
 
@@ -195,8 +195,13 @@ onUnmounted(() => clearInterval(timer))
 }
 
 @keyframes pulse {
-  0%, 100% { box-shadow: 0 0 0 2px rgba(136, 192, 87, 0.35); }
-  50%       { box-shadow: 0 0 0 5px rgba(136, 192, 87, 0.12); }
+  0%,
+  100% {
+    box-shadow: 0 0 0 2px rgba(136, 192, 87, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(136, 192, 87, 0.12);
+  }
 }
 
 .live-text {
@@ -205,11 +210,70 @@ onUnmounted(() => clearInterval(timer))
   font-weight: 700;
   letter-spacing: 0.04em;
   color: #244030;
+  font-variant-numeric: tabular-nums;
+}
+
+.nav-menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(136, 192, 87, 0.12);
+  color: #1b3022;
+  cursor: pointer;
+}
+
+.nav-menu-btn .material-symbols-outlined {
+  font-size: 1.35rem;
+}
+
+.nav-mobile-panel {
+  display: none;
+  border-top: 1px solid rgba(27, 48, 34, 0.08);
+  background: rgba(249, 251, 247, 0.98);
+  padding: 0.75rem 1.5rem 1rem;
+}
+
+.nav-mobile-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.nav-mobile-link {
+  display: block;
+  padding: 0.65rem 0.85rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #3d5242;
+  text-decoration: none;
+}
+
+.nav-mobile-link:hover,
+.nav-mobile-link.active {
+  background: rgba(136, 192, 87, 0.2);
+  color: #1b3022;
+  font-weight: 600;
 }
 
 @media (max-width: 768px) {
   .nav-links {
     display: none;
+  }
+
+  .nav-menu-btn {
+    display: flex;
+  }
+
+  .nav-mobile-panel {
+    display: block;
   }
 }
 </style>

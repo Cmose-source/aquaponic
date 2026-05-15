@@ -1,4 +1,4 @@
-﻿import { initializeApp } from 'firebase/app'
+﻿import { initializeApp, getApps } from 'firebase/app'
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -11,5 +11,19 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 }
 
-const app = initializeApp(firebaseConfig)
-export default app
+if (!import.meta.env.VITE_FIREBASE_DATABASE_URL && import.meta.env.DEV) {
+  console.warn(
+    '[Firebase] VITE_FIREBASE_DATABASE_URL kosong. Buat file .env di root proyek lalu restart: npm run dev',
+  )
+}
+
+let app = null
+
+export function getFirebaseApp() {
+  if (!app) {
+    app = getApps().length > 0 ? getApps()[0] : initializeApp(firebaseConfig)
+  }
+  return app
+}
+
+export default { getFirebaseApp }
