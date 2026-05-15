@@ -8,7 +8,7 @@ const year = computed(() => new Date().getFullYear())
 const footerLinks = {
   produk: [
     { label: 'Fitur', href: '#fitur' },
-    { label: 'Monitoring', to: { name: 'dashboard' } },
+    { label: 'Dashboard', to: { name: 'dashboard' } },
     { label: 'Dasbor', to: { name: 'dashboard' } },
   ],
   sumber: [

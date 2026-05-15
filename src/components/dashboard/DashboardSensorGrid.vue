@@ -18,7 +18,7 @@ const sensors = [
   },
   {
     icon: 'water_drop',
-    iconBgClass: 'bg-blue-100',
+    iconBgClass: 'bg-teal-50',
     iconTextClass: 'text-status-water',
     iconFilled: true,
     status: 'Normal',

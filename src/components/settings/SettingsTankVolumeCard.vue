@@ -10,7 +10,7 @@ const fillTarget = ref('85')
     class="flex h-full flex-col rounded-xl border border-border-muted bg-surface-cream p-8 shadow-[0_4px_12px_rgba(58,90,64,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
   >
     <div class="mb-6 flex items-center gap-3">
-      <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#E5F1FC]">
+      <div class="flex h-10 w-10 items-center justify-center rounded-full bg-teal-50">
         <span
           class="material-symbols-outlined text-status-water"
           style="font-variation-settings: 'FILL' 1"

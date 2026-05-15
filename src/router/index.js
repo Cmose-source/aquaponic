@@ -17,12 +17,22 @@ const router = createRouter({
     {
       path: '/analytics',
       name: 'analytics',
-      component: () => import('../views/AnalyticsView.vue'),
+      component: () => import('../views/MonitoringView.vue'),
     },
     {
       path: '/settings',
       name: 'settings',
       component: () => import('../views/SettingsView.vue'),
+    },
+    {
+      path: '/monitoring',
+      name: 'monitoring',
+      component: () => import('../views/MonitoringView.vue'),
+    },
+    {
+      path: '/control',
+      name: 'control',
+      component: () => import('../views/ControlView.vue'),
     },
     {
       path: '/about',

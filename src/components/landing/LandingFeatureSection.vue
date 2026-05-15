@@ -1,18 +1,18 @@
 <script setup>
 const features = [
   {
-    icon: 'monitoring',
-    title: 'Monitoring',
+    icon: 'dashboard',
+    title: 'Dashboard',
     body: 'Pantau data kualitas air, suhu, dan kelembapan secara real-time dari perangkat Anda kapan saja.',
-  },
-  {
-    icon: 'smart_toy',
-    title: 'Automation',
-    body: 'Kontrol cerdas untuk pompa dan aerator yang menyesuaikan secara otomatis berdasarkan kondisi terkini.',
   },
   {
     icon: 'analytics',
     title: 'Analytics',
+    body: 'Kontrol cerdas untuk pompa dan aerator yang menyesuaikan secara otomatis berdasarkan kondisi terkini.',
+  },
+  {
+    icon: 'settings',
+    title: 'Settings',
     body: 'Dapatkan wawasan mendalam tentang pertumbuhan tanaman dan prediksi kualitas air untuk masa depan.',
   },
 ]
