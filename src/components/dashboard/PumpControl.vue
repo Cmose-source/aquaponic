@@ -33,7 +33,15 @@
         </span>
       </div>
       <span class="pump-control__state-detail">
-        {{ isOn ? 'Pompa sedang menyala' : 'Tekan untuk hidupkan pompa manual' }}
+        {{
+          isOn
+            ? targetTopic === 'Isa/Feeder'
+              ? 'Mesin pakan otomatis sedang menyala'
+              : 'Pompa sedang menyala'
+            : targetTopic === 'Isa/Feeder'
+              ? 'Tekan untuk memberi pakan ikan manual'
+              : 'Tekan untuk hidupkan pompa manual'
+        }}
       </span>
     </div>
 

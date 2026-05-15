@@ -10,6 +10,31 @@ const isConnected = ref(false)
 const lampStatus = ref('OFF')
 const feederStatus = ref('OFF')
 
+// Menyimpan riwayat aktivitas terbaru (maks 20 log)
+const historyLogs = ref([])
+
+function addHistoryLog(topic, status) {
+  const now = new Date()
+  const timeStr = now.toLocaleTimeString('id-ID', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  })
+  const deviceName = topic === 'Isa/Smartlamp' ? 'Primary Water Pump' : 'Automatic Feeding'
+  const actionName = `${deviceName} ${status === 'ON' ? 'started' : 'stopped'}`
+
+  // Jika sudah mencapai 5 dan ada yang ke-6, ulang/reset dari 1 (kosongkan dulu lalu isi 1)
+  if (historyLogs.value.length === 5) {
+    historyLogs.value = []
+  }
+
+  historyLogs.value.unshift({
+    time: timeStr,
+    action: actionName,
+    value: status,
+  })
+}
+
 export function useMqtt() {
   const connectMqtt = () => {
     // Hindari koneksi ganda jika sebelumnya sudah klik connect
@@ -38,9 +63,15 @@ export function useMqtt() {
 
       // Pisahkan ke wadahnya masing-masing tergantung topik mana yang membalas
       if (topic === 'Isa/Smartlamp') {
-        lampStatus.value = msgStr
+        if (lampStatus.value !== msgStr) {
+          lampStatus.value = msgStr
+          addHistoryLog(topic, msgStr)
+        }
       } else if (topic === 'Isa/Feeder') {
-        feederStatus.value = msgStr
+        if (feederStatus.value !== msgStr) {
+          feederStatus.value = msgStr
+          addHistoryLog(topic, msgStr)
+        }
       }
     })
 
@@ -65,6 +96,7 @@ export function useMqtt() {
     isConnected,
     lampStatus,
     feederStatus,
+    historyLogs,
     connectMqtt,
     controlDevice,
   }

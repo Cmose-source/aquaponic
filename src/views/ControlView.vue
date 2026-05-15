@@ -1,7 +1,5 @@
 ﻿<template>
   <div class="control-view">
-    <AppSidebar />
-
     <main class="control-view__main">
       <section class="control-header">
         <div>
@@ -65,25 +63,15 @@
         <section class="history-section">
           <h3 class="section-title">📋 Control History</h3>
           <div class="history-list">
-            <div class="history-item">
-              <span class="history-time">14:32</span>
-              <span class="history-action">Primary pump started</span>
-              <span class="history-value">60%</span>
-            </div>
-            <div class="history-item">
-              <span class="history-time">14:20</span>
-              <span class="history-action">Nutrient pump stopped</span>
-              <span class="history-value">-</span>
-            </div>
-            <div class="history-item">
-              <span class="history-time">14:00</span>
-              <span class="history-action">Automation rule triggered</span>
-              <span class="history-value">Soil Humidity</span>
-            </div>
-            <div class="history-item">
-              <span class="history-time">13:45</span>
-              <span class="history-action">Primary pump stopped</span>
-              <span class="history-value">-</span>
+            <template v-if="historyLogs.length > 0">
+              <div v-for="(log, idx) in historyLogs" :key="idx" class="history-item">
+                <span class="history-time">{{ log.time }}</span>
+                <span class="history-action">{{ log.action }}</span>
+                <span class="history-value">{{ log.value }}</span>
+              </div>
+            </template>
+            <div v-else class="history-item" style="justify-content: center; color: #64748b">
+              Belum ada riwayat aktivitas terbaru.
             </div>
           </div>
         </section>
@@ -93,15 +81,17 @@
 </template>
 
 <script setup>
-import AppSidebar from '@/components/common/AppSidebar.vue'
 import PumpControl from '@/components/dashboard/PumpControl.vue'
 import WateringSchedule from '@/components/dashboard/WateringSchedule.vue'
+import { useMqtt } from '@/composables/useMqtt'
+
+const { historyLogs } = useMqtt()
 </script>
 
 <style scoped>
 .control-view {
   display: grid;
-  grid-template-columns: minmax(220px, 260px) 1fr;
+  grid-template-columns: 1fr;
   gap: 1.15rem;
 }
 

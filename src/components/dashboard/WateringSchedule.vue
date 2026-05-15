@@ -2,7 +2,7 @@
   <section class="watering-schedule">
     <div class="watering-schedule__header">
       <div>
-        <p class="watering-schedule__title">Jadwal Penyiraman</p>
+        <p class="watering-schedule__title">Jadwal Penyiraman & Auto Feeding</p>
         <p class="watering-schedule__subtitle">Atur jam nyala dan mati otomatis pompa.</p>
       </div>
       <button class="watering-schedule__button" type="button" @click="showForm = !showForm">
