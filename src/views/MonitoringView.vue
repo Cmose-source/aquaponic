@@ -22,42 +22,46 @@
         <!-- Main Charts -->
         <SensorChart
           title="Humidity Monitoring"
-          subtitle="Kelembapan air harian"
+          subtitle="Data kelembapan udara"
           indicator="Aktif"
-          :value="66"
+          :value="kelembapanStatus"
           unit="%"
-          summaryText="Rata-rata intensitas"
-          trend="+3.1% hari ini"
+          summaryText="Kelembapan saat ini"
+          trend="Live Update"
+          :series="kelembapanHistory"
+          :chartLabels="timeLabels"
           class="chart-large"
         />
         <SensorChart
           title="Temperature Tracking"
-          subtitle="Suhu lingkungan harian"
+          subtitle="Data suhu lingkungan"
           indicator="Stabil"
-          :value="28"
+          :value="suhuStatus"
           unit="°C"
-          summaryText="Rata-rata suhu"
-          trend="+0.8° dari kemarin"
+          summaryText="Suhu saat ini"
+          trend="Live Update"
+          :series="suhuHistory"
+          :chartLabels="timeLabels"
           class="chart-large"
         />
         <!-- Sensor Cards Row -->
         <div class="cards-row">
           <SensorCard
-            title="Soil Humidity"
-            subtitle="Kelembapan tanah"
-            :value="66"
+            title="Air Humidity"
+            subtitle="Kelembapan udara"
+            :value="kelembapanStatus"
             unit="%"
             :min="40"
             :max="80"
             status="Good"
           />
           <SensorCard
-            title="pH Level"
-            subtitle="Kualitas air"
-            :value="6.8"
-            unit=""
-            :min="6.5"
-            :max="7.5"
+            title="Air Temperature"
+            subtitle="Suhu lingkungan"
+            :value="suhuStatus"
+            unit="°C"
+            :min="15"
+            :max="35"
             status="Good"
           />
           <SensorCard
@@ -70,7 +74,6 @@
             status="Good"
           />
         </div>
-
       </div>
     </main>
   </div>
@@ -79,6 +82,10 @@
 import { ref } from 'vue'
 import SensorChart from '@/components/dashboard/SensorChart.vue'
 import SensorCard from '@/components/dashboard/SensorCard.vue'
+import { useMqtt } from '@/composables/useMqtt'
+
+const { suhuStatus, kelembapanStatus, suhuHistory, kelembapanHistory, timeLabels } = useMqtt()
+
 const timeRanges = [
   { id: '24h', labelShort: '24 jam', labelHint: 'Harian' },
   { id: '7d', labelShort: '7 hari', labelHint: 'Mingguan' },

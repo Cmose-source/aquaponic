@@ -10,6 +10,15 @@ const isConnected = ref(false)
 const lampStatus = ref('OFF')
 const feederStatus = ref('OFF')
 
+// State sensor
+const suhuStatus = ref(0)
+const kelembapanStatus = ref(0)
+
+// Array untuk menyimpan history data grafik (maksimal 7 data terakhir)
+const suhuHistory = ref([0, 0, 0, 0, 0, 0, 0])
+const kelembapanHistory = ref([0, 0, 0, 0, 0, 0, 0])
+const timeLabels = ref(['', '', '', '', '', '', ''])
+
 // Menyimpan riwayat aktivitas terbaru (maks 20 log)
 const historyLogs = ref([])
 
@@ -55,6 +64,8 @@ export function useMqtt() {
       // Subscribe ke banyak topik sekaligus
       client.value.subscribe('Isa/Smartlamp')
       client.value.subscribe('Isa/Feeder')
+      client.value.subscribe('Isa/Suhu')
+      client.value.subscribe('Isa/Kelembapan')
     })
 
     client.value.on('message', (topic, message) => {
@@ -72,6 +83,27 @@ export function useMqtt() {
           feederStatus.value = msgStr
           addHistoryLog(topic, msgStr)
         }
+      } else if (topic === 'Isa/Suhu') {
+        const value = parseFloat(msgStr)
+        suhuStatus.value = value
+
+        // Simpan ke history dan geser data (FIFO)
+        suhuHistory.value.shift()
+        suhuHistory.value.push(value)
+
+        // Update label waktu
+        const now = new Date()
+        timeLabels.value.shift()
+        timeLabels.value.push(
+          `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`,
+        )
+      } else if (topic === 'Isa/Kelembapan') {
+        const value = parseFloat(msgStr)
+        kelembapanStatus.value = value
+
+        // Simpan ke history dan geser data (FIFO)
+        kelembapanHistory.value.shift()
+        kelembapanHistory.value.push(value)
       }
     })
 
@@ -96,6 +128,11 @@ export function useMqtt() {
     isConnected,
     lampStatus,
     feederStatus,
+    suhuStatus,
+    kelembapanStatus,
+    suhuHistory,
+    kelembapanHistory,
+    timeLabels,
     historyLogs,
     connectMqtt,
     controlDevice,

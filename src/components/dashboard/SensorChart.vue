@@ -10,7 +10,9 @@
 
     <div class="chart-card__summary">
       <div>
-        <h2>{{ value }}<small>{{ unit }}</small></h2>
+        <h2>
+          {{ value }}<small>{{ unit }}</small>
+        </h2>
         <p>{{ summaryText }}</p>
       </div>
       <div class="chart-card__trend">{{ trend }}</div>
@@ -25,13 +27,7 @@
     </svg>
 
     <div class="chart-card__labels">
-      <span>Senin</span>
-      <span>Selasa</span>
-      <span>Rabu</span>
-      <span>Kamis</span>
-      <span>Jumat</span>
-      <span>Sabtu</span>
-      <span>Minggu</span>
+      <span v-for="(label, idx) in chartLabels" :key="'lbl-' + idx">{{ label }}</span>
     </div>
   </article>
 </template>
@@ -47,26 +43,26 @@ const props = defineProps({
   unit: { type: String, default: '%' },
   summaryText: { type: String, default: 'Rata-rata hari ini' },
   trend: { type: String, default: '+6.2% vs kemarin' },
+  series: { type: Array, default: () => [0, 0, 0, 0, 0, 0, 0] },
+  chartLabels: { type: Array, default: () => ['1', '2', '3', '4', '5', '6', '7'] },
 })
 
-const series = [34, 40, 48, 56, 63, 60, 72]
-const max = Math.max(...series)
-const min = Math.min(...series)
-const range = max - min || 1
+const points = computed(() => {
+  const max = Math.max(...props.series, 1)
+  const min = Math.min(...props.series)
+  const range = max - min || 1
 
-const points = computed(() =>
-  series.map((value, index) => {
-    const x = 40 + index * 40
+  const gap = 260 / Math.max(props.series.length - 1, 1)
+  return props.series.map((value, index) => {
+    const x = 40 + index * gap
     const y = 120 - ((value - min) / range) * 80
     return { x, y }
   })
-)
+})
 
 const linePath = computed(() => {
   return points.value.reduce((path, point, index) => {
-    return index === 0
-      ? `M ${point.x} ${point.y}`
-      : `${path} L ${point.x} ${point.y}`
+    return index === 0 ? `M ${point.x} ${point.y}` : `${path} L ${point.x} ${point.y}`
   }, '')
 })
 
